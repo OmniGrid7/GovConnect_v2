@@ -5,7 +5,7 @@ import pickle, os, types
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
-BASE = os.path.dirname(os.path.dirname(__file__))
+BASE = os.path.dirname(__file__)
 
 # ── Stubs so pickle can deserialise the saved classes ───────────────────
 class EligibilityEngine:
@@ -117,6 +117,14 @@ class Engine:
 
     def _get_st(self):
         if self._st is None:
+            # Memory optimizations for Render Free Tier (512MB RAM)
+            import os
+            os.environ["OMP_NUM_THREADS"] = "1"
+            os.environ["MKL_NUM_THREADS"] = "1"
+            os.environ["OPENBLAS_NUM_THREADS"] = "1"
+            import torch
+            torch.set_num_threads(1)
+            
             from sentence_transformers import SentenceTransformer
             self._st = SentenceTransformer(self.model_name)
             print("[GovConnect v2] ST model loaded.")

@@ -9,7 +9,7 @@ _engine = None
 def engine():
     global _engine
     if _engine is None:
-        from engine.recommender import get_engine
+        from recommender import get_engine
         _engine = get_engine()
     return _engine
 
