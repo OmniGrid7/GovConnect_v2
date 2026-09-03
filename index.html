@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GovConnect — SIH26129 | Maharashtra Government Services</title>
+<style>
+/* ── Reset & Base ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1E2761;--navy-light:#2C3583;--navy-dark:#141a47;
+  --saffron:#F9A825;--saffron-light:#ffc107;
+  --ice:#CADCFC;--white:#fff;--light:#F5F7FC;
+  --slate:#4A5578;--border:#dde3f0;
+  --green:#2e7d32;--red:#c62828;--orange:#e65100;
+  --radius:10px;--shadow:0 4px 18px rgba(30,39,97,.13);
+  --font:'Segoe UI',system-ui,sans-serif;
+}
+body{font-family:var(--font);background:var(--light);color:#1a1a2e;min-height:100vh}
+
+/* ── Header ── */
+header{background:var(--navy);color:var(--white);padding:0 5%}
+.header-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:38px;height:38px;background:var(--saffron);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:20px}
+.logo-text h1{font-size:1.25rem;font-weight:700;letter-spacing:.3px}
+.logo-text p{font-size:.7rem;opacity:.75;letter-spacing:.5px;text-transform:uppercase}
+.header-badge{background:var(--saffron);color:var(--navy);font-size:.7rem;
+  font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.5px}
+
+/* ── Hero / Search ── */
+.hero{background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy-light) 100%);
+  padding:48px 5% 40px;text-align:center;color:var(--white)}
+.hero h2{font-size:clamp(1.4rem,3vw,2.2rem);font-weight:700;margin-bottom:10px}
+.hero p{opacity:.8;font-size:1rem;margin-bottom:32px;max-width:600px;margin-inline:auto}
+
+/* Search box */
+.search-wrap{max-width:720px;margin:0 auto}
+.search-box{display:flex;background:var(--white);border-radius:50px;overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,.3)}
+#query{flex:1;border:none;outline:none;padding:16px 24px;font-size:1rem;
+  font-family:var(--font);color:#1a1a2e}
+#search-btn{background:var(--saffron);border:none;cursor:pointer;padding:0 28px;
+  font-size:1.1rem;font-weight:700;color:var(--navy);transition:background .2s}
+#search-btn:hover{background:var(--saffron-light)}
+.lang-hint{margin-top:10px;font-size:.8rem;opacity:.65}
+.lang-pills{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.lang-pill{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  color:var(--white);padding:4px 14px;border-radius:20px;font-size:.78rem;
+  cursor:pointer;transition:background .2s}
+.lang-pill:hover{background:rgba(255,255,255,.25)}
+
+/* ── Profile Panel ── */
+.profile-toggle{max-width:720px;margin:16px auto 0;text-align:right}
+.profile-toggle button{background:none;border:1px solid rgba(255,255,255,.4);
+  color:var(--white);padding:6px 16px;border-radius:20px;cursor:pointer;font-size:.82rem}
+.profile-panel{max-width:720px;margin:12px auto 0;background:rgba(255,255,255,.08);
+  border-radius:var(--radius);padding:20px;display:none;border:1px solid rgba(255,255,255,.15)}
+.profile-panel.open{display:block}
+.profile-panel h3{color:var(--saffron);font-size:.9rem;margin-bottom:14px;text-transform:uppercase;letter-spacing:.8px}
+.profile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.profile-grid label{font-size:.78rem;opacity:.8;display:block;margin-bottom:4px}
+.profile-grid input,.profile-grid select{width:100%;padding:8px 12px;border-radius:6px;
+  border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);
+  color:var(--white);font-size:.85rem;outline:none}
+.profile-grid select option{background:var(--navy);color:var(--white)}
+
+/* ── Main Layout ── */
+main{max-width:1200px;margin:0 auto;padding:32px 5%}
+
+/* Stats bar */
+.stats-bar{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+.stat-card{background:var(--white);border-radius:var(--radius);padding:16px 22px;
+  flex:1;min-width:160px;box-shadow:var(--shadow);border-left:4px solid var(--navy)}
+.stat-card .val{font-size:1.8rem;font-weight:700;color:var(--navy)}
+.stat-card .lbl{font-size:.78rem;color:var(--slate);text-transform:uppercase;letter-spacing:.5px}
+
+/* Section header */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.section-header h3{font-size:1.15rem;color:var(--navy);font-weight:700}
+.result-count{background:var(--navy);color:var(--white);padding:3px 12px;
+  border-radius:20px;font-size:.78rem;font-weight:700}
+
+/* Scheme cards */
+.results-grid{display:grid;gap:20px}
+.scheme-card{background:var(--white);border-radius:var(--radius);
+  box-shadow:var(--shadow);overflow:hidden;transition:transform .2s,box-shadow .2s;
+  border:1px solid var(--border)}
+.scheme-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(30,39,97,.18)}
+
+.card-header{padding:18px 22px 12px;display:flex;align-items:flex-start;gap:14px}
+.card-rank{width:36px;height:36px;border-radius:50%;background:var(--navy);
+  color:var(--white);font-weight:700;font-size:.9rem;display:flex;
+  align-items:center;justify-content:center;flex-shrink:0}
+.card-meta{flex:1}
+.card-meta h4{font-size:1rem;color:var(--navy);font-weight:700;line-height:1.3;margin-bottom:6px}
+.card-meta .native{font-size:.8rem;color:var(--slate);margin-bottom:8px;font-style:italic}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{padding:2px 10px;border-radius:20px;font-size:.72rem;font-weight:700;text-transform:uppercase}
+.badge-dept{background:#e8eaf6;color:var(--navy-light)}
+.badge-cat{background:#fff8e1;color:#6d4c00}
+.badge-elig{padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700}
+.elig-high{background:#e8f5e9;color:var(--green)}
+.elig-mid{background:#fff3e0;color:var(--orange)}
+.elig-low{background:#fce4ec;color:var(--red)}
+
+/* Score bars */
+.score-section{padding:0 22px 14px;display:flex;gap:16px;flex-wrap:wrap}
+.score-item{flex:1;min-width:140px}
+.score-label{font-size:.72rem;color:var(--slate);margin-bottom:4px;font-weight:600;text-transform:uppercase}
+.score-bar-wrap{background:#eee;border-radius:4px;height:7px;overflow:hidden}
+.score-bar{height:100%;border-radius:4px;transition:width .6s ease}
+.bar-relevance{background:var(--navy)}
+.bar-eligibility{background:var(--green)}
+.score-val{font-size:.72rem;color:var(--slate);margin-top:3px}
+
+/* Card body */
+.card-body{padding:0 22px 14px}
+.desc{font-size:.88rem;color:#333;line-height:1.6;margin-bottom:12px}
+.benefits-label{font-size:.75rem;font-weight:700;color:var(--navy);
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.benefits-text{font-size:.85rem;color:#1a3a1a;background:#e8f5e9;
+  border-left:3px solid var(--green);padding:8px 12px;border-radius:4px;line-height:1.5}
+
+/* Eligibility detail */
+.elig-detail{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.elig-box{border-radius:6px;padding:10px 12px;font-size:.8rem}
+.elig-box h5{font-size:.72rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:6px}
+.elig-pass{background:#e8f5e9;color:var(--green)}
+.elig-pass h5{color:#1b5e20}
+.elig-fail{background:#fce4ec;color:var(--red)}
+.elig-fail h5{color:#b71c1c}
+.elig-item{display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;line-height:1.4}
+.elig-item:last-child{margin-bottom:0}
+
+/* Documents */
+.docs-section{margin-top:12px}
+.docs-label{font-size:.75rem;font-weight:700;color:var(--navy);
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.docs-list{display:flex;flex-wrap:wrap;gap:6px}
+.doc-tag{background:var(--light);border:1px solid var(--border);
+  border-radius:20px;padding:3px 10px;font-size:.75rem;color:var(--slate)}
+
+/* Card footer */
+.card-footer{padding:14px 22px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:gap;gap:10px}
+.apply-btn{background:var(--navy);color:var(--white);border:none;cursor:pointer;
+  padding:9px 22px;border-radius:25px;font-size:.85rem;font-weight:700;
+  text-decoration:none;transition:background .2s;display:inline-block}
+.apply-btn:hover{background:var(--navy-light)}
+.expand-btn{background:none;border:1px solid var(--border);color:var(--slate);
+  padding:7px 16px;border-radius:25px;cursor:pointer;font-size:.8rem;transition:.2s}
+.expand-btn:hover{border-color:var(--navy);color:var(--navy)}
+
+/* ── Empty / Loading states ── */
+.empty-state,.loading-state{text-align:center;padding:60px 20px;color:var(--slate)}
+.empty-state .icon,.loading-state .icon{font-size:3rem;margin-bottom:16px}
+.empty-state p{max-width:400px;margin:0 auto;line-height:1.6}
+.spinner{width:40px;height:40px;border:4px solid var(--border);
+  border-top-color:var(--navy);border-radius:50%;animation:spin .8s linear infinite;
+  margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── All Schemes Tab ── */
+.browse-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.browse-card{background:var(--white);border-radius:var(--radius);padding:18px;
+  box-shadow:var(--shadow);border:1px solid var(--border);cursor:pointer;
+  transition:transform .2s,box-shadow .2s}
+.browse-card:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(30,39,97,.16)}
+.browse-card h4{font-size:.9rem;color:var(--navy);font-weight:700;margin-bottom:6px;line-height:1.4}
+.browse-card p{font-size:.8rem;color:var(--slate);line-height:1.5}
+.browse-card .bc-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.bc-cat{font-size:.72rem;background:var(--light);border:1px solid var(--border);
+  border-radius:20px;padding:2px 10px;color:var(--slate);text-transform:capitalize}
+
+/* ── Architecture Tab ── */
+.arch-section{background:var(--white);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
+.arch-section h3{color:var(--navy);font-size:1.1rem;margin-bottom:8px}
+.arch-section p{color:var(--slate);font-size:.88rem;margin-bottom:20px}
+.arch-box{background:var(--light);border:1px solid var(--border);border-radius:8px;
+  padding:20px 24px;font-family:'Courier New',monospace;font-size:.82rem;
+  line-height:1.7;color:#1a1a2e;overflow-x:auto;white-space:pre}
+.phase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:20px}
+.phase-card{border-radius:8px;padding:18px}
+.phase1{background:#e3f2fd;border-left:4px solid #1565c0}
+.phase2{background:#e8f5e9;border-left:4px solid var(--green)}
+.phase3{background:#fff8e1;border-left:4px solid #f9a825}
+.phase4{background:#fce4ec;border-left:4px solid #c62828}
+.phase-card h4{font-size:.88rem;font-weight:700;margin-bottom:10px}
+.phase-card ul{list-style:none;padding:0}
+.phase-card ul li{font-size:.8rem;color:var(--slate);padding:3px 0;
+  padding-left:14px;position:relative;line-height:1.4}
+.phase-card ul li::before{content:"▸";position:absolute;left:0;color:inherit;opacity:.7}
+
+/* ── Tabs ── */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:28px}
+.tab{padding:10px 22px;cursor:pointer;font-size:.9rem;font-weight:600;
+  color:var(--slate);border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s}
+.tab.active{color:var(--navy);border-bottom-color:var(--navy)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* ── Error toast ── */
+.toast{position:fixed;bottom:24px;right:24px;background:#c62828;color:var(--white);
+  padding:14px 20px;border-radius:8px;font-size:.88rem;box-shadow:0 4px 16px rgba(0,0,0,.25);
+  opacity:0;transform:translateY(20px);transition:.3s;z-index:999;max-width:320px}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* Responsive */
+@media(max-width:600px){
+  .header-inner{height:auto;padding:12px 0;flex-direction:column;gap:8px;align-items:flex-start}
+  .elig-detail{grid-template-columns:1fr}
+  .phase-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">🏛️</div>
+      <div class="logo-text">
+        <h1>GovConnect</h1>
+        <p>Maharashtra Government Service Portal</p>
+      </div>
+    </div>
+    <span class="header-badge">SIH26129</span>
+  </div>
+</header>
+
+<!-- ── Hero / Search ── -->
+<div class="hero">
+  <h2>Find the Right Government Scheme — Instantly</h2>
+  <p>Ask in English, हिंदी, or मराठी. Our AI understands your need and recommends the most relevant schemes.</p>
+  <div class="search-wrap">
+    <div class="search-box">
+      <input id="query" type="text" placeholder="e.g. I am a farmer looking for irrigation support…" autocomplete="off"/>
+      <button id="search-btn" onclick="search()">🔍 Find</button>
+    </div>
+    <div class="lang-hint">Try in your language →</div>
+    <div class="lang-pills">
+      <span class="lang-pill" onclick="setQuery('I need health insurance for my family')">🇬🇧 Health insurance</span>
+      <span class="lang-pill" onclick="setQuery('शेतकऱ्यांसाठी सिंचन योजना')">मराठी</span>
+      <span class="lang-pill" onclick="setQuery('गरीब परिवार के लिए घर की योजना')">हिंदी</span>
+      <span class="lang-pill" onclick="setQuery('scholarship for SC student in college')">SC Scholarship</span>
+      <span class="lang-pill" onclick="setQuery('महिलांसाठी एलपीजी गॅस कनेक्शन')">LPG Gas</span>
+      <span class="lang-pill" onclick="setQuery('skill training for unemployed youth')">Skill Training</span>
+    </div>
+  </div>
+
+  <!-- Profile panel -->
+  <div class="profile-toggle">
+    <button onclick="toggleProfile()">⚙️ Add my profile for better results</button>
+  </div>
+  <div class="profile-panel" id="profile-panel">
+    <h3>Optional Profile — improves eligibility matching</h3>
+    <div class="profile-grid">
+      <div>
+        <label>Annual Income (₹)</label>
+        <input type="number" id="p-income" placeholder="e.g. 80000"/>
+      </div>
+      <div>
+        <label>Age</label>
+        <input type="number" id="p-age" placeholder="e.g. 35" min="1" max="120"/>
+      </div>
+      <div>
+        <label>Gender</label>
+        <select id="p-gender">
+          <option value="">— Select —</option>
+          <option>Male</option>
+          <option>Female</option>
+        </select>
+      </div>
+      <div>
+        <label>Category</label>
+        <select id="p-category">
+          <option value="">— Select —</option>
+          <option>SC</option>
+          <option>ST</option>
+          <option>OBC</option>
+          <option>Farmer</option>
+          <option>BPL</option>
+          <option>General</option>
+          <option>EWS</option>
+          <option>Unorganized Worker</option>
+        </select>
+      </div>
+      <div>
+        <label>Area</label>
+        <select id="p-area">
+          <option value="">— Select —</option>
+          <option>Rural</option>
+          <option>Urban</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Main Content ── -->
+<main>
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="val" id="stat-schemes">15</div>
+      <div class="lbl">Schemes Indexed</div>
+    </div>
+    <div class="stat-card" style="border-color:var(--green)">
+      <div class="val" id="stat-dept">8</div>
+      <div class="lbl">Departments</div>
+    </div>
+    <div class="stat-card" style="border-color:var(--saffron)">
+      <div class="val" id="stat-lang">3</div>
+      <div class="lbl">Languages</div>
+    </div>
+    <div class="stat-card" style="border-color:#6a1b9a">
+      <div class="val" id="stat-engine">v2 Pickle</div>
+      <div class="lbl">AI Engine</div>
+    </div>
+    <div class="stat-card" style="border-color:#2e7d32">
+      <div class="val" id="stat-mrr">—</div>
+      <div class="lbl">Model MRR</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('results')">🔍 Results</div>
+    <div class="tab" onclick="switchTab('browse')">📋 Browse All Schemes</div>
+    <div class="tab" onclick="switchTab('architecture')">🏗️ Architecture</div>
+  </div>
+
+  <!-- Results tab -->
+  <div class="tab-panel active" id="tab-results">
+    <div id="results-area">
+      <div class="empty-state">
+        <div class="icon">🔍</div>
+        <p>Search for a government scheme above — try typing what you need in any language.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Browse tab -->
+  <div class="tab-panel" id="tab-browse">
+    <div class="browse-grid" id="browse-area">
+      <div class="loading-state"><div class="spinner"></div><p>Loading schemes…</p></div>
+    </div>
+  </div>
+
+  <!-- Architecture tab -->
+  <div class="tab-panel" id="tab-architecture">
+    <div class="arch-section">
+      <h3>System Architecture — SIH26129</h3>
+      <p>Two-phase AI engine running on verified Maharashtra government scheme data.</p>
+      <div class="arch-box">               Maharashtra Govt Platforms
+      ┌─────────────┬─────────────┬─────────────┐
+      │  Education  │ Agriculture │  Employment │
+      └─────────────┴─────────────┴─────────────┘
+                        |
+                   API Gateway
+                        |
+               Data Normalization
+                        |
+             Government Service DB  ← 15 verified schemes
+                        |
+         ┌──────────────┴──────────────┐
+         │                             │
+  Eligibility Engine            AI Matching Engine
+  (Phase 1: rule-based)        (Phase 2: Sentence Transformers)
+  • Income check                • paraphrase-multilingual-MiniLM
+  • Age check                   • TF-IDF + cosine similarity
+  • Category check              • Language detection (EN/HI/MR)
+  • Gender check                • Query expansion via glossary
+  • Area check                  • Weighted score blending
+         │                             │
+         └──────────────┬──────────────┘
+                        |
+                  Ranking Engine
+                  (40% TF-IDF + 60% Semantic + Eligibility boost)
+                        |
+              Explainable Results
+              (matched rules, missing docs, score bars)
+                        |
+                 Citizen Portal
+                 (Flask + HTML, no login required)</div>
+
+      <div class="phase-grid">
+        <div class="phase-card phase1">
+          <h4>✅ Phase 1 — Working Prototype</h4>
+          <ul>
+            <li>Verified scheme metadata (15 real Maharashtra schemes)</li>
+            <li>Normalized scheme database (JSON)</li>
+            <li>Rule-based eligibility engine</li>
+            <li>TF-IDF recommendation with bigrams</li>
+          </ul>
+        </div>
+        <div class="phase-card phase2">
+          <h4>✅ Phase 2 — Better AI</h4>
+          <ul>
+            <li>Sentence Transformers (multilingual MiniLM)</li>
+            <li>Marathi, Hindi and English support</li>
+            <li>Entity extraction via query expansion glossary</li>
+            <li>Weighted semantic + TF-IDF score blending</li>
+          </ul>
+        </div>
+        <div class="phase-card phase3">
+          <h4>🔧 Phase 3 — Interoperability (Planned)</h4>
+          <ul>
+            <li>Connect approved departmental APIs</li>
+            <li>Common API/data model across departments</li>
+            <li>Service discovery across Maharashtra portals</li>
+            <li>Status tracking where APIs permit</li>
+          </ul>
+        </div>
+        <div class="phase-card phase4">
+          <h4>🔒 Phase 4 — Production Grade (Planned)</h4>
+          <ul>
+            <li>Role-based access control</li>
+            <li>Encryption + secure authentication</li>
+            <li>Consent and data minimization</li>
+            <li>Audit logs + model drift monitoring</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Error toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Utility ──────────────────────────────────────────────────────────────
+function $(id){ return document.getElementById(id) }
+
+function showToast(msg){
+  const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 4000);
+}
+
+function setQuery(q){ $('query').value=q; search(); }
+
+function toggleProfile(){
+  const p=$('profile-panel');
+  p.classList.toggle('open');
+}
+
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  const idx={'results':0,'browse':1,'architecture':2}[name];
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+  $('tab-'+name).classList.add('active');
+  if(name==='browse') loadBrowse();
+}
+
+function getProfile(){
+  const p={};
+  const inc=parseInt($('p-income').value); if(!isNaN(inc)&&inc>0) p.income=inc;
+  const age=parseInt($('p-age').value);   if(!isNaN(age)&&age>0) p.age=age;
+  const gen=$('p-gender').value;    if(gen) p.gender=gen;
+  const cat=$('p-category').value;  if(cat) p.category=cat;
+  const area=$('p-area').value;     if(area) p.area=area;
+  return p;
+}
+
+// ── Eligibility badge ─────────────────────────────────────────────────────
+function eligBadge(score){
+  if(score>=0.75) return '<span class="badge badge-elig elig-high">✅ Likely Eligible</span>';
+  if(score>=0.40) return '<span class="badge badge-elig elig-mid">⚠️ Partially Eligible</span>';
+  if(score===0.5) return '<span class="badge badge-elig elig-mid">ℹ️ Open Scheme</span>';
+  return '<span class="badge badge-elig elig-low">❌ May Not Qualify</span>';
+}
+
+// ── Render one scheme card ────────────────────────────────────────────────
+function renderCard(r, rank){
+  const s=r;
+  const rel=Math.round(r.relevance_score*100);
+  const eli=Math.round(r.eligibility_score*100);
+  const lang=r.detected_language;
+  const nativeName = lang==='mr'?s.name_mr:(lang==='hi'?s.name_hi:'');
+  const nativeDesc = lang==='mr'?s.description_mr:(lang==='hi'?s.description_hi:'');
+
+  const matchedHtml = r.matched_rules.length
+    ? r.matched_rules.map(m=>`<div class="elig-item">✔ ${m}</div>`).join('')
+    : '<div class="elig-item">No profile data provided</div>';
+
+  const missingHtml = r.missing_rules.length
+    ? r.missing_rules.map(m=>`<div class="elig-item">✘ ${m}</div>`).join('')
+    : '<div class="elig-item">No conflicts detected</div>';
+
+  const docsHtml = s.documents.map(d=>`<span class="doc-tag">📄 ${d}</span>`).join('');
+
+  return `
+  <div class="scheme-card" id="card-${s.id}">
+    <div class="card-header">
+      <div class="card-rank">${rank}</div>
+      <div class="card-meta">
+        <h4>${s.name}</h4>
+        ${nativeName?`<div class="native">${nativeName}</div>`:''}
+        <div class="badges">
+          <span class="badge badge-dept">🏛 ${s.department}</span>
+          <span class="badge badge-cat">📂 ${s.category}</span>
+          ${eligBadge(r.eligibility_score)}
+          ${lang!=='en'?`<span class="badge" style="background:#f3e5f5;color:#6a1b9a">🌐 ${lang.toUpperCase()}</span>`:''}
+        </div>
+      </div>
+    </div>
+
+    <div class="score-section">
+      <div class="score-item">
+        <div class="score-label">Relevance</div>
+        <div class="score-bar-wrap"><div class="score-bar bar-relevance" style="width:${rel}%"></div></div>
+        <div class="score-val">${rel}%</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">Eligibility Match</div>
+        <div class="score-bar-wrap"><div class="score-bar bar-eligibility" style="width:${eli===50?60:eli}%"></div></div>
+        <div class="score-val">${eli===50?'Open':eli+'%'}</div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="desc">${nativeDesc||s.description}</div>
+      <div class="benefits-label">Benefits</div>
+      <div class="benefits-text">💰 ${s.benefits}</div>
+
+      <div class="elig-detail">
+        <div class="elig-box elig-pass">
+          <h5>✅ Criteria Met</h5>
+          ${matchedHtml}
+        </div>
+        <div class="elig-box elig-fail">
+          <h5>❗ Requirements / Gaps</h5>
+          ${missingHtml}
+        </div>
+      </div>
+
+      <div class="docs-section">
+        <div class="docs-label">Required Documents</div>
+        <div class="docs-list">${docsHtml}</div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <a class="apply-btn" href="${s.portal}" target="_blank" rel="noopener">🔗 Apply / Know More</a>
+      <button class="expand-btn" onclick="toggleNative('${s.id}')">🌐 View in other languages</button>
+    </div>
+
+    <div id="native-${s.id}" style="display:none;padding:0 22px 16px;border-top:1px solid var(--border);margin-top:8px">
+      ${s.name_mr?`<p style="margin-bottom:8px"><strong>मराठी:</strong> ${s.description_mr}</p>`:''}
+      ${s.name_hi?`<p><strong>हिंदी:</strong> ${s.description_hi}</p>`:''}
+    </div>
+  </div>`;
+}
+
+function toggleNative(id){
+  const el=document.getElementById('native-'+id);
+  el.style.display=el.style.display==='none'?'block':'none';
+}
+
+// ── Search ────────────────────────────────────────────────────────────────
+async function search(){
+  const q=$('query').value.trim();
+  if(!q){ showToast('Please enter a query first.'); return; }
+
+  // Switch to results tab
+  switchTab('results');
+  $('tab-results').classList.add('active');
+
+  const area=$('results-area');
+  area.innerHTML=`<div class="loading-state"><div class="spinner"></div><p>Analysing your query with AI…</p></div>`;
+
+  const profile=getProfile();
+
+  try{
+    const resp=await fetch('/api/recommend',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({query:q, profile, top_k:5})
+    });
+    if(!resp.ok) throw new Error(`Server error: ${resp.status}`);
+    const data=await resp.json();
+    if(data.error) throw new Error(data.error);
+
+    const results=data.results;
+    if(!results||results.length===0){
+      area.innerHTML=`<div class="empty-state"><div class="icon">😕</div><p>No matching schemes found. Try rephrasing your question or remove filters.</p></div>`;
+      return;
+    }
+
+    const detectedLang=results[0]?.detected_language||'en';
+    const langLabel={'en':'English','hi':'Hindi / हिंदी','mr':'Marathi / मराठी'}[detectedLang]||detectedLang;
+
+    area.innerHTML=`
+      <div class="section-header">
+        <h3>Top Recommendations <small style="font-weight:400;color:var(--slate)">— Query detected as ${langLabel}</small></h3>
+        <span class="result-count">${results.length} schemes</span>
+      </div>
+      <div class="results-grid">
+        ${results.map((r,i)=>renderCard(r,i+1)).join('')}
+      </div>`;
+
+  }catch(err){
+    showToast('Error: '+err.message);
+    area.innerHTML=`<div class="empty-state"><div class="icon">⚠️</div><p>${err.message}</p></div>`;
+  }
+}
+
+// ── Browse all schemes ────────────────────────────────────────────────────
+let browsedLoaded=false;
+async function loadBrowse(){
+  if(browsedLoaded) return;
+  try{
+    const resp=await fetch('/api/schemes');
+    const data=await resp.json();
+    const ba=$('browse-area');
+    ba.innerHTML=data.schemes.map(s=>`
+      <div class="browse-card" onclick="quickSearch('${s.name.replace(/'/,"\\'")}')">
+        <h4>${s.name}</h4>
+        <p>${s.benefits.slice(0,90)}…</p>
+        <div class="bc-footer">
+          <span class="bc-cat">${s.category}</span>
+          <a href="${s.portal}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
+             style="font-size:.78rem;color:var(--navy);font-weight:700">Apply ↗</a>
+        </div>
+      </div>`).join('');
+    browsedLoaded=true;
+  }catch(e){ showToast('Failed to load schemes.'); }
+}
+
+function quickSearch(name){
+  $('query').value=name;
+  switchTab('results');
+  search();
+}
+
+// ── Enter key ─────────────────────────────────────────────────────────────
+$('query').addEventListener('keydown', e=>{ if(e.key==='Enter') search(); });
+
+// ── Load stats on start ────────────────────────────────────────────────────
+fetch('/api/schemes').then(r=>r.json()).then(d=>{
+  $('stat-schemes').textContent=d.total;
+  const depts=new Set(d.schemes.map(s=>s.department));
+  $('stat-dept').textContent=depts.size;
+}).catch(()=>{});
+
+fetch('/api/metrics').then(r=>r.json()).then(d=>{
+  if(d.MRR !== undefined) $('stat-mrr').textContent = d.MRR.toFixed(2);
+}).catch(()=>{});
+</script>
+</body>
+</html>
